@@ -34,7 +34,7 @@ public class Pneumatics {
 	public void fireLauncherTwo() {
 		fireTime.start();
 		relayOne.set(Relay.Value.kReverse);
-		if (fireTime.hasPeriodPassed(.0005)) {
+		if (fireTime.get()>.0005) {
 			relayOne.set(Relay.Value.kOff);
 		}
 		barrelTwo = true;
@@ -43,7 +43,7 @@ public class Pneumatics {
 	public void fireLauncherThree() {
 		fireTime.start();
 		relayTwo.set(Relay.Value.kForward);
-		if (fireTime.hasPeriodPassed(.0005)) {
+		if (fireTime.hasPeriodPassed(.5)) {
 			relayTwo.set(Relay.Value.kOff);
 		}
 		barrelThree = true;

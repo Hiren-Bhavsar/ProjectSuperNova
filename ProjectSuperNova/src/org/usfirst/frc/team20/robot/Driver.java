@@ -6,7 +6,7 @@ public class Driver {
 
 	Joystick driverJoy = new Joystick(0);
 	Drivetrain dtrain = new Drivetrain();
-	Launchers launch = new Launchers();
+	Pneumatics launch = new Pneumatics();
 
 	public void driverControls() {
 		double rTurn = driverJoy.getRawAxis(3);
@@ -18,7 +18,7 @@ public class Driver {
 		boolean bBut = driverJoy.getRawButton(2);
 		boolean xBut = driverJoy.getRawButton(3);
 
-		int povVal = driverJoy.getPOV();
+		int povVal = driverJoy.getPOV();//D-Pad
 
 		if (povVal == 90 && aBut) {
 			launch.launchAll();
@@ -32,6 +32,12 @@ public class Driver {
 		if (povVal == 90 && yBut) {
 			launch.launcherTwo();
 		}
+		if (povVal != 90) {
+			//TODO Add In Method Call 
+			// Close All Spikes!
+			// This Is A Safety Thing
+		}
+		
 
 		dtrain.arcadeDrive(speed, rTurn, lTurn);
 	}

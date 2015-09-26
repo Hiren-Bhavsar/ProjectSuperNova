@@ -1,6 +1,11 @@
 package org.usfirst.frc.team20.robot;
 
-public class Launchers {
+import edu.wpi.first.wpilibj.Relay;
+
+public class Pneumatics {
+	//TODO Update Relay Port Values!
+	Relay relayOne = new Relay(0);
+	Relay relayTwo = new Relay(0);
 
 	public void launcherOne() {
 	}

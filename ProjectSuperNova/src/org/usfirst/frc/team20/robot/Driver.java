@@ -24,13 +24,13 @@ public class Driver {
 			launch.launchAll();
 		}
 		if (povVal == 90 && bBut) {
-			launch.launcherThree();
+			launch.fireLauncherThree();
 		}
 		if (povVal == 90 && xBut) {
-			launch.launcherOne();
+			launch.fireLauncherOne();
 		}
 		if (povVal == 90 && yBut) {
-			launch.launcherTwo();
+			launch.fireLauncherTwo();
 		}
 		if (povVal != 90) {
 			//TODO Add In Method Call 

@@ -1,8 +1,8 @@
 
 package org.usfirst.frc.team20.robot;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,12 +31,18 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     Compressor compress = new Compressor(1);
+    Driver driver = new Driver();
+    Pneumatics pneu = new Pneumatics();
+    
+    public static Timer refillTime = new Timer();
     
     public void teleopPeriodic() {
         compress.setClosedLoopControl(true);
-        Driver driver = new Driver();
         driver.driverControls();
         
+        if(driver.indeedRefill && (pneu.barrelOne||pneu.barrelThree||pneu.barrelTwo)){
+        	pneu.refillTanks();
+        }
     }
     
     /**

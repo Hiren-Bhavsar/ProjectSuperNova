@@ -8,6 +8,8 @@ public class Driver {
 	Drivetrain dtrain = new Drivetrain();
 	Pneumatics launch = new Pneumatics();
 
+	public boolean indeedRefill = false;
+
 	public void driverControls() {
 		double rTurn = driverJoy.getRawAxis(3);
 		double lTurn = driverJoy.getRawAxis(2);
@@ -18,10 +20,12 @@ public class Driver {
 		boolean bBut = driverJoy.getRawButton(2);
 		boolean xBut = driverJoy.getRawButton(3);
 
-		int povVal = driverJoy.getPOV();//D-Pad
-
+		int povVal = driverJoy.getPOV();// D-Pad
 		if (povVal == 90 && aBut) {
-			launch.launchAll();
+			launch.burstAll();
+		}
+		if(povVal == 270 && aBut){
+			launch.arcAll();
 		}
 		if (povVal == 90 && bBut) {
 			launch.fireLauncherThree();
@@ -32,13 +36,16 @@ public class Driver {
 		if (povVal == 90 && yBut) {
 			launch.fireLauncherTwo();
 		}
-		if (povVal != 90) {
-			//TODO Add In Method Call 
-			// Close All Spikes!
-			// This Is A Safety Thing
+		if (povVal != 90 || povVal !=270) {
+			launch.closeAll();
+		}
+
+		if(driverJoy.getRawButton(7) && driverJoy.getRawButton(8)){
+			indeedRefill = true;
+			Robot.refillTime.reset();
+			Robot.refillTime.start();
 		}
 		
-
 		dtrain.arcadeDrive(speed, rTurn, lTurn);
 	}
 

@@ -6,76 +6,85 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Pneumatics {
 
-	Driver driver = new Driver();
-
-	// TODO Update Relay Port Values!
-	Relay relayOne = new Relay(0);
+	Relay relayOne = new Relay(2);
 	Relay relayTwo = new Relay(0);
+
+	DoubleSolenoid solOne = new DoubleSolenoid(0, 1);
+	DoubleSolenoid solTwo = new DoubleSolenoid(2, 7);
 
 	Timer fireTime = new Timer();
 
-	// TODO Update Double Solenoid Port Values!
-	DoubleSolenoid solOne = new DoubleSolenoid(0, 0);
-	DoubleSolenoid solTwo = new DoubleSolenoid(0, 0);
-
 	public boolean barrelOne, barrelTwo, barrelThree = false;
 
-	// Launcher Controls - Uses Spike Relays TODO Figure Out How To Cut Time
 	public void fireLauncherOne() {
+		fireTime.reset();
 		fireTime.start();
-		relayOne.set(Relay.Value.kForward);
-		if (fireTime.hasPeriodPassed(.0005)) {
-			relayOne.set(Relay.Value.kOff);
+		if (fireTime.get() < .0005) {
+			relayOne.set(Relay.Value.kForward);
 		}
-		barrelOne = true;
+		relayOne.set(Relay.Value.kOff);
+		fireTime.stop();
 
+		barrelOne = true;
 	}
 
 	public void fireLauncherTwo() {
+		fireTime.reset();
 		fireTime.start();
-		relayOne.set(Relay.Value.kReverse);
-		if (fireTime.get()>.0005) {
-			relayOne.set(Relay.Value.kOff);
+		if (fireTime.get() < .0005) {
+			relayOne.set(Relay.Value.kReverse);
 		}
+		relayOne.set(Relay.Value.kOff);
+		fireTime.stop();
+
 		barrelTwo = true;
 	}
 
 	public void fireLauncherThree() {
+		fireTime.reset();
 		fireTime.start();
-		relayTwo.set(Relay.Value.kForward);
-		if (fireTime.hasPeriodPassed(.5)) {
-			relayTwo.set(Relay.Value.kOff);
+		if (fireTime.get() < .0005) {
+			relayTwo.set(Relay.Value.kForward);
 		}
+		relayTwo.set(Relay.Value.kOff);
+		fireTime.stop();
+
 		barrelThree = true;
 	}
 
 	public void burstAll() {
+		fireTime.reset();
 		fireTime.start();
-		relayOne.set(Relay.Value.kOn);
-		relayTwo.set(Relay.Value.kForward);
-		if (fireTime.hasPeriodPassed(.0005)) {
-			relayOne.set(Relay.Value.kOff);
-			relayTwo.set(Relay.Value.kOff);
+		if (fireTime.get() < .0005) {
+			relayOne.set(Relay.Value.kOn);
+			relayTwo.set(Relay.Value.kOn);
 		}
+		relayOne.set(Relay.Value.kOff);
+		relayTwo.set(Relay.Value.kOff);
+		fireTime.stop();
+
 		barrelOne = true;
 		barrelTwo = true;
 		barrelThree = true;
 	}
 
 	public void arcAll() {
+		fireTime.reset();
 		fireTime.start();
-		relayOne.set(Relay.Value.kOn);
-		if (fireTime.hasPeriodPassed(.0005)) {
+		if (fireTime.get() < .0010) {
+			relayOne.set(Relay.Value.kForward);
+		}
+		if (fireTime.get() > .0010 && fireTime.get() < .0020) {
 			relayOne.set(Relay.Value.kReverse);
 		}
-		if (fireTime.hasPeriodPassed(.0005)) {
+		if (fireTime.get() > .0020 && fireTime.get() < .0030) {
+			relayOne.set(Relay.Value.kOff);
 			relayTwo.set(Relay.Value.kForward);
-			relayOne.set(Relay.Value.kOff);
 		}
-		if (fireTime.hasPeriodPassed(.0005)) {
-			relayOne.set(Relay.Value.kOff);
-			relayTwo.set(Relay.Value.kOff);
-		}
+		relayOne.set(Relay.Value.kOff);
+		relayTwo.set(Relay.Value.kOff);
+		fireTime.stop();
+
 		barrelOne = true;
 		barrelTwo = true;
 		barrelThree = true;
@@ -88,43 +97,24 @@ public class Pneumatics {
 
 	// Refill Control - Uses Double Solenoids
 	public void refillTanks() {
-		relayOne.set(Relay.Value.kOff);
-		relayTwo.set(Relay.Value.kOff);
-
-		// TODO Update The Times
-		if (Robot.refillTime.get() <= 2) {
-			if (barrelOne) {
+		fireTime.reset();
+		fireTime.start();
+		while (fireTime.get() < 5.1) {
+			if (fireTime.get() < 2.5) {
 				solOne.set(DoubleSolenoid.Value.kForward);
-				if (barrelTwo && !barrelOne) {
-					solOne.set(DoubleSolenoid.Value.kReverse);
-				}
-				if (barrelThree) {
-					solTwo.set(DoubleSolenoid.Value.kForward);
-				}
+				solTwo.set(DoubleSolenoid.Value.kForward);
 			}
-			if (Robot.refillTime.get() <= 4) {
-				if (barrelTwo && barrelOne) {
-					solOne.set(DoubleSolenoid.Value.kReverse);
-				} else {
-					solOne.set(DoubleSolenoid.Value.kOff);
-					solTwo.set(DoubleSolenoid.Value.kOff);
-					barrelOne = false;
-					barrelTwo = false;
-					barrelThree = false;
-					Robot.refillTime.stop();
-				}
-
+			if (fireTime.get() > 2.5 && fireTime.get() < 5) {
+				solOne.set(DoubleSolenoid.Value.kReverse);
 				solTwo.set(DoubleSolenoid.Value.kOff);
 			}
-			if (Robot.refillTime.get() > 4) {
+			if (fireTime.get() > 5) {
 				solOne.set(DoubleSolenoid.Value.kOff);
 				solTwo.set(DoubleSolenoid.Value.kOff);
-				barrelOne = false;
-				barrelTwo = false;
-				barrelThree = false;
-				Robot.refillTime.stop();
 			}
-
 		}
+		solOne.set(DoubleSolenoid.Value.kOff);
+		solTwo.set(DoubleSolenoid.Value.kOff);
+		fireTime.stop();
 	}
 }
